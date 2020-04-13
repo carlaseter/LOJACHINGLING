@@ -20,7 +20,7 @@ namespace LojaCL
 
         public void CarregaDgvCliente()
         {
-            String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+            String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
             String query = "select * from cliente";
             SqlConnection con = new SqlConnection(str);
             SqlCommand cmd = new SqlCommand(query, con);
@@ -42,7 +42,7 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
                 SqlConnection con = new SqlConnection(str);
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "Inserir";
@@ -73,7 +73,7 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
                 SqlConnection con = new SqlConnection(str);
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "Localizar";
@@ -103,7 +103,7 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
                 SqlConnection con = new SqlConnection(str);
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "Atualizar";
@@ -135,7 +135,7 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
                 SqlConnection con = new SqlConnection(str);
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "Excluir";

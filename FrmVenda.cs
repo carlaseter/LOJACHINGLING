@@ -13,7 +13,7 @@ namespace LojaCL
 {
     public partial class FrmVenda : Form
     {
-        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30");
+        SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30");
         public FrmVenda()
         {
             InitializeComponent();
@@ -171,10 +171,6 @@ namespace LojaCL
 
         private void btnFinalizar_Click(object sender, EventArgs e)
         {
-            if (con.State == ConnectionState.Open)
-            {
-                con.Close();
-            }
             con.Open();
             SqlCommand cmd = new SqlCommand("InserirVenda", con);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -188,12 +184,6 @@ namespace LojaCL
             {
                 SqlCommand cmditens = new SqlCommand("InserirItens", con);
                 cmditens.CommandType = CommandType.StoredProcedure;
-                //aqui começo a subtrair do meu estoque
-                string ven = "update produto set quantidade = (quantidade - @quantidade2) from produto where Id = @id_produto2";
-                SqlCommand cmditemvenda = new SqlCommand(ven, con);
-                cmditemvenda.Parameters.AddWithValue("@quantidade2", SqlDbType.Int).Value = Convert.ToInt32(dr.Cells[2].Value);
-                cmditemvenda.Parameters.AddWithValue("@id_produto2", SqlDbType.Int).Value = Convert.ToInt32(dr.Cells[0].Value);
-                //termina a subtração do estoque
                 cmditens.Parameters.AddWithValue("@quantidade", SqlDbType.Int).Value = Convert.ToInt32(dr.Cells[2].Value);
                 cmditens.Parameters.AddWithValue("@id_produto", SqlDbType.Int).Value = Convert.ToInt32(dr.Cells[0].Value);
                 cmditens.Parameters.AddWithValue("@id_venda", SqlDbType.Int).Value = idvenda2;
@@ -201,12 +191,12 @@ namespace LojaCL
                 cmditens.Parameters.AddWithValue("@valor_total", SqlDbType.Decimal).Value = Convert.ToDecimal(dr.Cells[4].Value);
                 if(con.State == ConnectionState.Open)
                 {
+
                     //Fecho o banco de dados
                     con.Close();
                 }
                 con.Open();
                 cmditens.ExecuteNonQuery();
-                cmditemvenda.ExecuteNonQuery();
                 con.Close();
             }
             MessageBox.Show("Venda realizada com sucesso!", "Venda", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -227,28 +217,45 @@ namespace LojaCL
             dgvVenda.Refresh();
         }
 
+        private void i(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void btnFinalizar_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void txtQuantidade_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void txtQuantidade_Leave(object sender, EventArgs e)
         {
-            if (con.State == ConnectionState.Open)
-            {
-                con.Close();
-            }
             con.Open();
             SqlCommand cmd = new SqlCommand("LocalizarProduto", con);
-            cmd.Parameters.AddWithValue("@Id", cbxProduto.SelectedValue);
+            cmd.Parameters.AddWithValue("@id", cbxProduto.SelectedValue);
             cmd.CommandType = CommandType.StoredProcedure;
             SqlDataReader rd = cmd.ExecuteReader();
             int valor1 = 0;
             bool conversaoSucedida = int.TryParse(txtQuantidade.Text, out valor1);
-            if (rd.Read())
+            if(rd.Read())
             {
                 int valor2 = Convert.ToInt32(rd["quantidade"].ToString());
-                if (valor1 > valor2)
+                string nomeprod = rd["nome"].ToString();
+                string nomeprod2 = nomeprod.Trim();
+                if(valor1 > valor2)
                 {
-                    MessageBox.Show("Não possui quantidade suficiente em estoque!", "Estoque", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Não possui quantidade suficiente em estoque!");
                     con.Close();
                     txtQuantidade.Text = "";
                     txtQuantidade.Focus();
+                }
+                else
+                {
+                    con.Close();
                 }
             }
         }

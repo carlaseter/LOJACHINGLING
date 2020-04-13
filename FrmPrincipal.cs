@@ -33,14 +33,15 @@ namespace LojaCL
         {
             try
             {
-                SqlConnection con = classeconexao.obterConexao();
-                String query = "select * from cliente";
-                SqlCommand cmd = new SqlCommand(query, con);
-                classeconexao.obterConexao();
-                DataSet ds = new DataSet();
-                MessageBox.Show("Conectado ao Banco de Dados com Sucesso!", "Teste de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                classeconexao.fecharConexao();
-            }
+                    String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Downloads\\LojaC--master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+                    String query = "select * from cliente";
+                    SqlConnection con = new SqlConnection(str);
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    con.Open();
+                    DataSet ds = new DataSet();
+                MessageBox.Show("Conectado ao Banco de Dados com Sucesso!", "Teste de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Information) ;
+                    con.Close();
+                }
             catch (Exception er)
             {
                 MessageBox.Show(er.Message);
@@ -57,12 +58,6 @@ namespace LojaCL
         {
             FrmVenda ven = new FrmVenda();
             ven.Show();
-        }
-
-        private void usuáriosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmCrudUsuario usu = new FrmCrudUsuario();
-            usu.Show();
         }
     }
 }
