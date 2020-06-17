@@ -13,24 +13,26 @@ namespace LojaCL
 {
     public partial class FrmCrudUsuario : Form
     {
+        private Cripto b;
+        SqlConnection con = Conexao.obterConexao();
         public FrmCrudUsuario()
         {
             InitializeComponent();
+            b = new Cripto();
         }
 
         public void CarregaDgvUsuario()
         {
-            String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
+            SqlConnection con = Conexao.obterConexao();
             String query = "select * from usuario";
-            SqlConnection con = new SqlConnection(str);
             SqlCommand cmd = new SqlCommand(query, con);
-            con.Open();
+            Conexao.obterConexao();
             cmd.CommandType = CommandType.Text;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable produto = new DataTable();
             da.Fill(produto);
             DgvUsuario.DataSource = produto;
-            con.Close();
+            Conexao.fecharConexao();
         }
 
         private void btnSair_Click(object sender, EventArgs e)
@@ -42,19 +44,23 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
-                SqlConnection con = new SqlConnection(str);
+                SqlConnection con = Conexao.obterConexao();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "InserirUsuario";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@nome", txtNome.Text);
                 cmd.Parameters.AddWithValue("@login", txtLogin.Text);
-                cmd.Parameters.AddWithValue("@senha", txtSenha.Text);
-                con.Open();
+                //Pego o valor o txtSenha e codifico ela.
+                txtSenha.Text = b.Base64Encode(txtSenha.Text);
+                //Crio uma nova varialvel e atribuo o txtSenha a ela.
+                string criptografada = txtSenha.Text;
+                //Passo para o parametro gravar a senha decodificada.
+                cmd.Parameters.AddWithValue("@senha", criptografada);
+                Conexao.obterConexao();
                 cmd.ExecuteNonQuery();
                 CarregaDgvUsuario();
                 MessageBox.Show("Registro inserido com sucesso!", "Cadastro", MessageBoxButtons.OK);
-                con.Close();
+                Conexao.fecharConexao();
                 txtId.Text = "";
                 txtNome.Text = "";
                 txtLogin.Text = "";
@@ -70,8 +76,7 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
-                SqlConnection con = new SqlConnection(str);
+                SqlConnection con = Conexao.obterConexao();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "AtualizarUsuario";
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -79,11 +84,11 @@ namespace LojaCL
                 cmd.Parameters.AddWithValue("@nome", this.txtNome.Text);
                 cmd.Parameters.AddWithValue("@login", this.txtLogin.Text);
                 cmd.Parameters.AddWithValue("@senha", this.txtSenha.Text);
-                con.Open();
+                Conexao.obterConexao();
                 cmd.ExecuteNonQuery();
                 CarregaDgvUsuario();
                 MessageBox.Show("Registro atualizado com sucesso!", "Atualizar Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                con.Close();
+                Conexao.fecharConexao();
                 txtId.Text = "";
                 txtNome.Text = "";
                 txtLogin.Text = "";
@@ -99,17 +104,16 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
-                SqlConnection con = new SqlConnection(str);
+                SqlConnection con = Conexao.obterConexao();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "ExcluirUsuario";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Id", this.txtId.Text);
-                con.Open();
+                Conexao.obterConexao();
                 cmd.ExecuteNonQuery();
                 CarregaDgvUsuario();
                 MessageBox.Show("Registro apagado com sucesso!", "Excluir Registro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                con.Close();
+                Conexao.fecharConexao();
                 txtId.Text = "";
                 txtNome.Text = "";
                 txtLogin.Text = "";
@@ -125,13 +129,12 @@ namespace LojaCL
         {
             try
             {
-                String str = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\carla\\Desktop\\LojaChingLing-master\\DbLoja.mdf;Integrated Security=True;Connect Timeout=30";
-                SqlConnection con = new SqlConnection(str);
+                SqlConnection con = Conexao.obterConexao();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = "LocalizarUsuario";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Id", this.txtId.Text);
-                con.Open();
+                Conexao.obterConexao();
                 SqlDataReader rd = cmd.ExecuteReader();
                 if (rd.Read())
                 {
@@ -139,10 +142,12 @@ namespace LojaCL
                     txtNome.Text = rd["nome"].ToString();
                     txtLogin.Text = rd["login"].ToString();
                     txtSenha.Text = rd["senha"].ToString();
+                    Conexao.fecharConexao();
                 }
                 else
                 {
                     MessageBox.Show("Nenhum registro encontrado!", "Sem registro!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Conexao.fecharConexao();
                 }
             }
             finally
